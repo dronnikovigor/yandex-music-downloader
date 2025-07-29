@@ -23,7 +23,7 @@ setup(
     ],
     python_requires=">=3.7",
     install_requires=[
-        "yandex-music>=2.0.0",
+        "yandex-music==2.2.0",
         "mutagen>=1.47.0",
         "requests>=2.32.4",
         "pycryptodomex>=3.23.0",
