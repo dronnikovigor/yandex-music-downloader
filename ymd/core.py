@@ -240,10 +240,10 @@ def set_tags(
                 data=album_cover.data,
             )
 
-        tag["WOAF"] = WOAF(
-            encoding=3,
-            text=track_url,
-        )
+        # tag["WOAF"] = WOAF(
+        #     encoding=3,
+        #     text=track_url,
+        # )
     elif isinstance(tag, MP4):
         tag["\xa9nam"] = track_title
         tag["\xa9alb"] = album_title
@@ -277,7 +277,7 @@ def set_tags(
             if mp4_image_format is None:
                 raise RuntimeError("Unsupported cover type")
             tag["covr"] = [MP4Cover(album_cover.data, imageformat=mp4_image_format)]
-        tag["\xa9cmt"] = track_url
+        # tag["\xa9cmt"] = track_url
     elif isinstance(tag, FLAC):
         tag["title"] = track_title
         tag["album"] = album_title
@@ -301,7 +301,7 @@ def set_tags(
             pic.data = album_cover.data
             pic.mime = album_cover.mime_type.value
             tag.add_picture(pic)
-        tag["comment"] = track_url
+        # tag["comment"] = track_url
     else:
         raise RuntimeError("Unknown file format")
 
