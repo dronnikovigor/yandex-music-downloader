@@ -5,14 +5,124 @@
 > об изменениях
 
 ## Содержание
-1. [О программе](#О-программе)
-2. [Установка](#Установка)
-3. [Получение данных для авторизации](#Получение-данных-для-авторизации)
-4. [Примеры использования](#Примеры-использования)
-5. [Использование](#Использование)
-6. [Уровни совместимости](#Уровни-совместимости)
-7. [Спасибо](#Спасибо)
-8. [Дисклеймер](#Дисклеймер)
+1. [Python API](#python-api)
+   - [Установка](#установка)
+   - [Быстрый старт](#быстрый-старт)
+   - [Документация API](#документация-api)
+2. [CLI](#cli)
+   - [О программе](#о-программе)
+   - [Установка](#установка-1)
+   - [Получение данных для авторизации](#получение-данных-для-авторизации)
+   - [Примеры использования](#примеры-использования)
+   - [Использование](#использование)
+   - [Уровни совместимости](#уровни-совместимости)
+3. [Спасибо](#спасибо)
+4. [Дисклеймер](#дисклеймер)
+
+## Python API
+
+### Установка
+
+```bash
+pip install -U git+https://github.com/yourusername/yandex-music-downloader.git
+```
+
+### Быстрый старт
+
+```python
+from ymd import YandexMusicDownloader, CoreTrackQuality, LyricsFormat
+
+# Инициализация с вашим OAuth токеном
+downloader = YandexMusicDownloader("ваш_oauth_токен")
+
+# Скачать трек по ID или URL
+downloader.download_track(
+    track_id="12345678",  # или URL вида "https://music.yandex.ru/album/12345678/track/7654321"
+    output_dir="./downloads",
+    quality=CoreTrackQuality.NORMAL,
+    lyrics_format=LyricsFormat.TEXT,
+    embed_cover=True
+)
+
+# Скачать альбом по ID или URL
+downloader.download_album(
+    album_id="87654321",  # или URL
+    output_dir="./downloads/albums",
+    quality=CoreTrackQuality.NORMAL
+)
+
+# Скачать плейлист по ID пользователя и ID плейлиста (или URL)
+downloader.download_playlist(
+    user_id="username",
+    playlist_id="1234",  # или URL
+    output_dir="./downloads/playlists"
+)
+```
+
+### Документация API
+
+#### `YandexMusicDownloader(token, timeout=10, max_retries=3, retry_delay=5)`
+Основной класс для загрузки музыки с Яндекс.Музыки.
+
+**Параметры:**
+- `token` (str): OAuth токен для доступа к API Яндекс.Музыки
+- `timeout` (int, optional): Таймаут запросов в секундах. По умолчанию 10
+- `max_retries` (int, optional): Максимальное количество попыток при ошибках. По умолчанию 3
+- `retry_delay` (int, optional): Задержка между попытками в секундах. По умолчанию 5
+
+#### Методы
+
+##### `download_track(track_id, output_dir, quality=CoreTrackQuality.NORMAL, lyrics_format=LyricsFormat.NONE, embed_cover=True, cover_resolution=800, compatibility_level=1)`
+Загружает один трек.
+
+**Параметры:**
+- `track_id` (str, int): ID трека или URL
+- `output_dir` (str, Path): Директория для сохранения
+- `quality` (CoreTrackQuality): Качество аудио (LOW, NORMAL, LOSSLESS)
+- `lyrics_format` (LyricsFormat): Формат текста песни (NONE, TEXT, LRC)
+- `embed_cover` (bool): Встраивать ли обложку в файл
+- `cover_resolution` (int): Разрешение обложки
+- `compatibility_level` (int): Уровень совместимости тегов (1-3)
+
+**Возвращает:**
+- Path: Путь к сохраненному файлу
+
+##### `download_album(album_id, output_dir, quality=CoreTrackQuality.NORMAL, lyrics_format=LyricsFormat.NONE, embed_cover=True, cover_resolution=800, compatibility_level=1)`
+Загружает все треки из альбома.
+
+**Параметры:**
+- `album_id` (str, int): ID альбома или URL
+- `output_dir` (str, Path): Базовая директория для сохранения
+- Остальные параметры аналогичны `download_track`
+
+**Возвращает:**
+- List[Path]: Список путей к сохраненным файлам
+
+##### `download_playlist(user_id, playlist_id, output_dir, quality=CoreTrackQuality.NORMAL, lyrics_format=LyricsFormat.NONE, embed_cover=True, cover_resolution=800, compatibility_level=1)`
+Загружает все треки из плейлиста.
+
+**Параметры:**
+- `user_id` (str): ID пользователя (если не указан в URL)
+- `playlist_id` (str, int): ID плейлиста или URL
+- `output_dir` (str, Path): Базовая директория для сохранения
+- Остальные параметры аналогичны `download_track`
+
+**Возвращает:**
+- List[Path]: Список путей к сохраненным файлам
+
+#### Константы
+
+##### `CoreTrackQuality`
+- `LOW`: Низкое качество (AAC 64kbps)
+- `NORMAL`: Обычное качество (AAC 192kbps)
+- `LOSSLESS`: Без потерь (FLAC)
+
+##### `LyricsFormat`
+- `NONE`: Не загружать текст
+- `TEXT`: Обычный текст
+- `LRC`: Синхронизированный текст (LRC формат)
+
+## CLI
 
 ## О программе
 Загрузчик, созданный вследствие наличия *фатального недостатка* в проекте [yandex-music-download](https://github.com/kaimi-io/yandex-music-download).

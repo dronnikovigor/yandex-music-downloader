@@ -32,7 +32,7 @@ from yandex_music import (
     Album,
     Client,
     Track,
-    YandexMusicModel,
+    YandexMusicObject,
 )
 from yandex_music.exceptions import NetworkError
 
@@ -121,7 +121,7 @@ def init_client(
     return client.init()
 
 
-def full_title(obj: YandexMusicModel) -> str:
+def full_title(obj: YandexMusicObject) -> str:
     result = obj["title"]
     if result is None:
         return ""
@@ -328,13 +328,11 @@ def download_track(
     if lyrics_format != LyricsFormat.NONE and (lyrics_info := track.lyrics_info):
         if lyrics_format == LyricsFormat.LRC and lyrics_info.has_available_sync_lyrics:
             lrc_path = target_path.with_suffix(".lrc")
-            if not lrc_path.is_file() and (
-                track_lyrics := track.get_lyrics(format_="LRC")
-            ):
+            if not lrc_path.is_file() and (track_lyrics := track.get_lyrics(format="LRC")):
                 lyrics = track_lyrics.fetch_lyrics()
                 write_via_temporary_file(lyrics.encode("utf-8"), lrc_path)
         elif lyrics_info.has_available_text_lyrics:
-            if track_lyrics := track.get_lyrics(format_="TEXT"):
+            if track_lyrics := track.get_lyrics(format="TEXT"):
                 text_lyrics = track_lyrics.fetch_lyrics()
 
     cover = None
